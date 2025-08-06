@@ -1389,7 +1389,7 @@ export const STR_CREATE_YEARS_TO_RETIRE = {
 
 export const STR_CREATE_MONTHLY_EXPENSES = {
   en: "Monthly Expenses",
-  sw: "Gharama kwa Mwezi"
+  sw: "Gharama za maisha kwa Mwezi"
 };
 
 export const STR_CREATE_TOTAL_SAVINGS = {
@@ -1461,6 +1461,76 @@ export const STR_CREATE_DATE_CREATED = {
   en: "Date Created",
   sw: "Tarehe ya Kujaza"
 };
+
+export const STR_CREATE_MONTHLY_EXPENDITURE = {
+  en: "Monthly Expenditure",
+  sw: "Matuizi ya mwezi"
+};
+
+
+
+export const STR_CREATE_SAVING = {
+  en: "Total Savings",
+  sw: "Akiba Yote",
+};
+
+export const STR_CREATE_INVESTMENT = {
+  en: "Investments",
+  sw: "Uwekezaji",
+};
+
+export const STR_CREATE_ASSERTS = {
+  en: "Non-Income Assets",
+  sw: "Mali Zisizokuwa na Mapato",
+};
+
+
+
+export const STR_CREATE_LOAN = {
+  en: "Do you have any Loan?",
+  sw: "Una Deni lolote?",
+};
+
+export const STR_CREATE_LOAN_AMOUNT = {
+  en: "Loan Amount (Tsh)",
+  sw: "Kiasi cha Deni (Tsh)",
+};
+
+
+
+export const STR_CREATE_PROJECTS = {
+  en: "Do you have Side Projects?",
+  sw: "Una Miradi ya Pembeni?",
+};
+
+
+
+export const STR_CREATE_MONTHLY_EXP_AFTER_RETIRE = {
+  en: "Monthly Expenses After Retirement",
+  sw: "Matumizi ya Mwezi Baada ya Kustaafu",
+};
+
+export const STR_CREATE_INCOME_EARNED_FREE = {
+  en: "income Earned When you are not working",
+  sw: "Kipato unachokipata wakati hufanyi kazi",
+};
+
+export const STR_CREATE_TEN_YEARS_PLAN = {
+  en: "10-Year Financial Plan",
+  sw: "Mpango wa Kifedha wa Miaka 10",
+};
+
+export const STR_OPTIONS_YES= {
+  en: "Yes",
+  sw: "Ndiyo",
+};
+
+export const STR_OPTIONS_NO= {
+  en: "No",
+  sw: "Hapana",
+};
+
+
 
 
 export const STR_ = {

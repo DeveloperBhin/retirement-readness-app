@@ -1,6 +1,5 @@
 // src/App.js
 import { useState, useEffect, createContext } from "react";
-import Viewer from './components/Viewer.js';
 import RetirementForm from './views/RetirementForm.js';
 import { getMainView, getViewerView, getSideViewerView, callApi, getBottomViewerView, getCookie, setCookie } from "./Helpers";
 import { ToastContainer, toast } from 'react-toastify';
@@ -16,7 +15,7 @@ function App() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [confirmDialogMessage, setConfirmDialogMessage] = useState("");
   const [confirmDialogAction, setConfirmDialogAction] = useState("");
-  const [language, setLanguage] = useState(getCookie('language') || 'sw');
+  const [language, setLanguage] = useState('sw')
 
 
 function activateDialog(params) {
@@ -69,10 +68,7 @@ function activateDialog(params) {
 
   };
 
-   useEffect(() => {
-    setCookie('language', language);
-  }, [language])
-
+   
 
   
 
@@ -99,19 +95,14 @@ function activateDialog(params) {
     <AppContext.Provider value={appContext}>
       <div className="App">
         <header className="app-header">
-          <h1>Retirement Readiness Check</h1>
-          <button
-            className="open-form-btn"
-            onClick={() => {
-              setViewerView(<RetirementForm />);
-              setShowViewer(true);
-            }}
-          >
-            Start Assessment
-          </button>
+          <h1 className="text-center">Retirement Readiness Check</h1>
+       
+           
+         
         </header>
+        <RetirementForm />
 
-        <Viewer />
+      
       </div>
     </AppContext.Provider>
   );
