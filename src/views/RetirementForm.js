@@ -7,7 +7,9 @@ import {
   STR_CREATE_RETIREMENT_AGE, STR_CREATE_MONTHLY_EXPENSES, STR_CREATE_TOTAL_SAVINGS, STR_CREATE_INVESTMENTS,
   STR_CREATE_NON_INCOME_ASSETS, STR_CREATE_HEALTH_INSURANCE, STR_CREATE_DEBTS,
   STR_CREATE_WILL_PLAN, STR_CREATE_SIDE_PROJECTS, STR_CREATE_MONTHLY_INVESTMENT_PLAN,
-  STR_CREATE_RETIREMENT_MONTHLY_EXPENSES, STR_CREATE_INCOME_EARNED_FREE, STR_CREATE_TEN_YEAR_GOAL,STR_OPTIONS_YES,STR_OPTIONS_NO
+  STR_CREATE_RETIREMENT_MONTHLY_EXPENSES, STR_CREATE_INCOME_EARNED_FREE, STR_CREATE_TEN_YEAR_GOAL,
+ STR_PERSONAL_DETAILS,STR_FINANCIAL_DETAILS,STR_OPTIONAL_PLANNING,STR_FUTURE_PLANNING,
+  STR_OPTIONS_YES, STR_OPTIONS_NO,
 } from '../Strings.js';
 
 export default function RetirementForm() {
@@ -31,18 +33,16 @@ export default function RetirementForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     const parsedValue = ['healthInsurance', 'loan', 'willPlan', 'projects', 'mounthlyInvestmentPlan'].includes(name)
       ? parseInt(value)
       : value;
-
     setForm(prev => ({ ...prev, [name]: parsedValue }));
     setErrors(prev => ({ ...prev, [name]: undefined }));
   };
 
   const requiredFields = [
-    'name', 'age', 'occupation', 'phone', 'email', 'ageToRetire',
-    'mounthlyExpenditure', 'saving', 'investment', 'asserts',
+    'name', 'age', 'occupation', 'phone', 'email',
+    'ageToRetire', 'mounthlyExpenditure', 'saving', 'investment', 'asserts',
     'incomeEarnedFree', 'tenYearsPlan', 'mounthlyExpenditureAfterRetire',
   ];
 
@@ -72,6 +72,10 @@ export default function RetirementForm() {
       newErrors.loanAmount = 'Loan amount is required';
     }
 
+    if (form.loanAmount === '') {
+      form.loanAmount = 0;
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -86,7 +90,7 @@ export default function RetirementForm() {
     const response = await callApi('evaluate', form);
     if (response.status === 1) {
       appContext.tellMessage(STR_SUCCESS[appContext.language]);
-      setResults(response.data); // 👈 display results below form
+      setResults(response.data);
     } else {
       appContext.tellError(response.msg);
     }
@@ -111,89 +115,137 @@ export default function RetirementForm() {
     tenYearsPlan: STR_CREATE_TEN_YEAR_GOAL,
   };
 
+ 
+
   const renderRadioGroup = (name, label) => (
-  <div className="col-md-6 mb-3" key={name}>
-    <label className="form-label">{label}</label>
-    <div className="d-flex gap-3">
-      {[{ label: STR_OPTIONS_YES, value: 1 }, { label: STR_OPTIONS_NO, value: 0 }].map(({ label, value }) => (
-        <div className="form-check" key={`${name}_${value}`}>
+    <div className="col-md-6 mb-3" key={name}>
+      <label className="form-label">{label}</label>
+      <div className="d-flex gap-3">
+        {[{ label: STR_OPTIONS_YES, value: 1 }, { label: STR_OPTIONS_NO, value: 0 }].map(({ label: optLabel, value }) => (
+          <label className="radio-container" key={`${name}_${value}`}>
+            <input
+              type="radio"
+              name={name}
+              value={value}
+              checked={form[name] === value}
+              onChange={handleChange}
+              id={`${name}_${value}`}
+            />
+            <span className="radio-checkmark"></span>
+            <span className="radio-label">{optLabel[appContext.language]}</span>
+          </label>
+        ))}
+      </div>
+      {errors[name] && <div className="text-danger mt-1">{errors[name]}</div>}
+
+      {name === 'loan' && form.loan === 1 && (
+        <div className="mt-2">
+          <label className="form-label">Loan Amount (Tsh)</label>
           <input
-            className="form-check-input"
-            type="radio"
-            id={`${name}_${value}`}
-            name={name}
-            value={value}
-            checked={form[name] === value}
+            className={`form-control ${errors.loanAmount ? 'is-invalid' : ''}`}
+            name="loanAmount"
+            type="text"
+            value={form.loanAmount}
             onChange={handleChange}
           />
-          <label className="form-check-label" htmlFor={`${name}_${value}`}>
-            {label[appContext.language]} {/* ✅ Correct use */}
-          </label>
+          {errors.loanAmount && <div className="invalid-feedback">{errors.loanAmount}</div>}
         </div>
-      ))}
+      )}
     </div>
-    {errors[name] && <div className="text-danger mt-1">{errors[name]}</div>}
-
-    {name === 'loan' && form.loan === 1 && (
-      <div className="mt-2">
-        <label className="form-label">Loan Amount (Tsh)</label>
-        <input
-          className={`form-control ${errors.loanAmount ? 'is-invalid' : ''}`}
-          name="loanAmount"
-          type="text"
-          value={form.loanAmount}
-          onChange={handleChange}
-        />
-        {errors.loanAmount && <div className="invalid-feedback">{errors.loanAmount}</div>}
-      </div>
-    )}
-  </div>
-);
-
+  );
 
   return (
     <div className="container mb-5">
+
+      {/* Personal Details */}
+      <h4 className="mb-3 mt-4">{STR_PERSONAL_DETAILS[appContext.language]}</h4>
       <div className="row">
-        {Object.entries(fieldLabels).map(([name, label]) => (
+        {['name', 'age', 'occupation', 'phone', 'email'].map(name => (
           <div className="col-md-6 mb-3" key={name}>
-            <label className="form-label">{label[appContext.language]}</label>
-            {name === 'tenYearsPlan' ? (
-              <textarea
-                className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
-                name={name}
-                value={form[name]}
-                onChange={handleChange}
-              />
-            ) : (
-              <input
-                className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
-                name={name}
-                type="text"
-                value={form[name]}
-                onChange={handleChange}
-              />
-            )}
+            <label className="form-label">{fieldLabels[name][appContext.language]}</label>
+            <input
+              className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
+              name={name}
+              type="text"
+              value={form[name]}
+              onChange={handleChange}
+            />
+            {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
+          </div>
+        ))}
+      </div>
+
+      {/* Financial Details */}
+      <h4 className="mb-3 mt-4">{STR_FINANCIAL_DETAILS[appContext.language]}</h4>
+      <div className="row">
+        {['ageToRetire', 'mounthlyExpenditure', 'saving', 'investment', 'asserts'].map(name => (
+          <div className="col-md-6 mb-3" key={name}>
+            <label className="form-label">{fieldLabels[name][appContext.language]}</label>
+            <input
+              className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
+              name={name}
+              type="text"
+              value={form[name]}
+              onChange={handleChange}
+            />
+            {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
+          </div>
+        ))}
+      </div>
+
+      {/* Optional Planning */}
+      <h4 className="mb-3 mt-4">{STR_OPTIONAL_PLANNING[appContext.language]}</h4>
+      <div className="row">
+        {radioFields.map(({ name, label }) => renderRadioGroup(name, label))}
+      </div>
+
+      {/* Future Planning */}
+      <h4 className="mb-3 mt-4">{STR_FUTURE_PLANNING[appContext.language]}</h4>
+      <div className="row">
+        {['mounthlyExpenditureAfterRetire', 'incomeEarnedFree'].map(name => (
+          <div className="col-md-6 mb-3" key={name}>
+            <label className="form-label">{fieldLabels[name][appContext.language]}</label>
+            <input
+              className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
+              name={name}
+              type="text"
+              value={form[name]}
+              onChange={handleChange}
+            />
             {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
           </div>
         ))}
 
-        {radioFields.map(({ name, label }) => renderRadioGroup(name, label))}
-
-        <div className="col-12 text-end mt-4">
-          <button className="btn btn-primary" onClick={handleSubmit} disabled={loading}>
-            {loading ? getInlineLoader() : STR_SUBMIT[appContext.language]}
-          </button>
+        {/* Ten Year Plan Textarea */}
+        <div className="col-12 mb-3">
+          <label className="form-label">{fieldLabels.tenYearsPlan[appContext.language]}</label>
+          <textarea
+            className={`form-control ${errors.tenYearsPlan ? 'is-invalid' : ''}`}
+            name="tenYearsPlan"
+            value={form.tenYearsPlan}
+            onChange={handleChange}
+          />
+          {errors.tenYearsPlan && <div className="invalid-feedback">{errors.tenYearsPlan}</div>}
         </div>
       </div>
 
-      {/* ✅ Render Evaluation Results */}
+      {/* Submit */}
+      <div className="col-12 text-end mt-4">
+        <button className="btn btn-primary" onClick={handleSubmit} disabled={loading}>
+          {loading ? getInlineLoader() : STR_SUBMIT[appContext.language]}
+        </button>
+      </div>
+
+      {/* Results */}
       {results && (
         <div className="mt-5 p-4 border border-success rounded bg-light">
           <h4 className="mb-3">Evaluation Results</h4>
-          
-         <h3> <span class="badge bg-success">{JSON.stringify(results.totalPercentage, null, 2)}%</span></h3>
-           <h2 className="medium">{JSON.stringify(results.feedback, null, 2)}</h2>
-
+          <h3>
+            <span className="badge bg-success">
+              {JSON.stringify(results.totalPercentage, null, 2)}%
+            </span>
+          </h3>
+          <h2 className="medium">{JSON.stringify(results.feedback, null, 2)}</h2>
         </div>
       )}
     </div>

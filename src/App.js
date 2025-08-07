@@ -3,7 +3,10 @@ import { useState, useEffect, createContext } from "react";
 import RetirementForm from './views/RetirementForm.js';
 import { getMainView, getViewerView, getSideViewerView, callApi, getBottomViewerView, getCookie, setCookie } from "./Helpers";
 import { ToastContainer, toast } from 'react-toastify';
+import {
+STR_FORM_INTRO_PARAGRAPH,STR_RETIREMENT_READNESS_CHECK,
 
+} from './Strings.js';
 
 
 export const AppContext = createContext(null);
@@ -93,18 +96,20 @@ function activateDialog(params) {
 
   return (
     <AppContext.Provider value={appContext}>
-      <div className="App">
-        <header className="app-header">
-          <h1 className="text-center">Retirement Readiness Check</h1>
-       
-           
-         
-        </header>
-        <RetirementForm />
+  <div className="App">
+    <header className="app-header">
+      <h1 className="text-center">      {STR_RETIREMENT_READNESS_CHECK[appContext.language]}
+</h1>
+    </header>
 
-      
-      </div>
-    </AppContext.Provider>
+   <div className="container alert alert-info mt-4">
+      {STR_FORM_INTRO_PARAGRAPH[appContext.language]}
+    </div>
+
+    <RetirementForm />
+  </div>
+</AppContext.Provider>
+
   );
 }
 
