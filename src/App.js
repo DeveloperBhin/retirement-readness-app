@@ -99,6 +99,19 @@ function activateDialog(params) {
   <div className="App">
     <header className="app-header">
       <h1 className="text-center">      {STR_RETIREMENT_READNESS_CHECK[appContext.language]}
+<div className="col-12 text-end mt-3 px-5">
+                          <button
+                            className="btn btn-warning"
+                            style={{
+                              textTransform: "capitalize",
+                              fontSize: "14px",
+                            }}
+                            onClick={() => appContext.changeLanguage()}
+                          >
+                            {(appContext.language === 'en') ? "Use Swahili" : "Use English"}
+                          </button>
+                          </div>
+                      
 </h1>
     </header>
 

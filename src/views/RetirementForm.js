@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../App.js';
 import { getInlineLoader, callApi } from '../Helpers.js';
+import jsPDF from 'jspdf';
 import {
   STR_SUBMIT, STR_SUCCESS,
   STR_CREATE_FULL_NAME, STR_CREATE_AGE, STR_CREATE_OCCUPATION, STR_CREATE_PHONE, STR_CREATE_EMAIL,
@@ -8,8 +9,15 @@ import {
   STR_CREATE_NON_INCOME_ASSETS, STR_CREATE_HEALTH_INSURANCE, STR_CREATE_DEBTS,
   STR_CREATE_WILL_PLAN, STR_CREATE_SIDE_PROJECTS, STR_CREATE_MONTHLY_INVESTMENT_PLAN,
   STR_CREATE_RETIREMENT_MONTHLY_EXPENSES, STR_CREATE_INCOME_EARNED_FREE, STR_CREATE_TEN_YEAR_GOAL,
- STR_PERSONAL_DETAILS,STR_FINANCIAL_DETAILS,STR_OPTIONAL_PLANNING,STR_FUTURE_PLANNING,
-  STR_OPTIONS_YES, STR_OPTIONS_NO,
+ STR_PERSONAL_DETAILS,STR_FINANCIAL_DETAILS,STR_OPTIONAL_PLANNING,STR_FUTURE_PLANNING,STR_CREATE_LOAN_AMOUNT,
+  STR_OPTIONS_YES, STR_OPTIONS_NO,STR_REQUIRED,STR_EVALUATION_RESULT,STR_NAME_OF_PARTICIPANT,STR_YEARS_LEFT_BEFORE_RETIREMENT,
+  STR_CREATE_MONTHLY_EXPENDITURE,STR__FINANCIAL_FREEDOM,STR__FINANCIAL_FREEDOM_PERCENT,STR_FINANCIAL_DETAILS_NOW,
+  STR_CREATE_PROJECTS,STR__IMPORTANT_PREPARATION,STR__INVESTMENT_AND_WILL_PLANS,STR_TOTAL_MARKS,
+  STR_CREATE_ASSERTS,
+  STR_CREATE_SAVING,
+  STR_CREATE_INVESTMENT,
+  STR_CREATE_FINANCIAL_FREEDOM_NUMBER,
+  STR_CREATE_FINANCIAL_FREEDOM_PERCENT
 } from '../Strings.js';
 
 export default function RetirementForm() {
@@ -58,18 +66,18 @@ export default function RetirementForm() {
     const newErrors = {};
     requiredFields.forEach(field => {
       if (!form[field]?.toString().trim()) {
-        newErrors[field] = `${field} is required`;
+        newErrors[field] = (STR_REQUIRED[appContext.language]);
       }
     });
 
     radioFields.forEach(({ name, label }) => {
       if (form[name] !== 0 && form[name] !== 1) {
-        newErrors[name] = `${label} is required`;
+        newErrors[name] = (STR_REQUIRED[appContext.language]);
       }
     });
 
     if (form.loan === 1 && !form.loanAmount?.toString().trim()) {
-      newErrors.loanAmount = 'Loan amount is required';
+      newErrors.loanAmount = (STR_REQUIRED[appContext.language]);
     }
 
     if (form.loanAmount === '') {
@@ -140,7 +148,7 @@ export default function RetirementForm() {
 
       {name === 'loan' && form.loan === 1 && (
         <div className="mt-2">
-          <label className="form-label">Loan Amount (Tsh)</label>
+          <label className="form-label">{STR_CREATE_LOAN_AMOUNT[appContext.language]}</label>
           <input
             className={`form-control ${errors.loanAmount ? 'is-invalid' : ''}`}
             name="loanAmount"
@@ -153,9 +161,168 @@ export default function RetirementForm() {
       )}
     </div>
   );
+function getBase64ImageFromUrl(imageUrl, opacity = 1) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function () {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 0.05;  // e.g. 0.2 for 20% opacity
+      ctx.drawImage(img, 0, 0);
+
+      const dataURL = canvas.toDataURL('image/png');
+      resolve(dataURL);
+    };
+    img.onerror = reject;
+    img.src = imageUrl;
+  });
+}
+
+
+const handleDownloadPDF = () => {
+  const doc = new jsPDF();
+  const leftMargin = 10;
+  const pageHeight = doc.internal.pageSize.height;
+  const pageWidth = doc.internal.pageSize.width;
+  let y = 20;
+
+ getBase64ImageFromUrl('/TANZANITE SKILLS ACADEMY.png').then(bgImageData => {
+    function addBackground() {
+      doc.addImage(bgImageData, 'PNG', 0, 0, pageWidth, pageHeight);
+    }
+
+    addBackground(); // First page background
+
+
+  // Add background on the first page before any text
+  addBackground();
+
+  // Check if adding more text will overflow page; add new page + background if needed
+  function checkAddPage(lineHeight = 10) {
+    if (y + lineHeight > pageHeight - 20) { // 20 = bottom margin
+      doc.addPage();
+      addBackground();
+      y = 20; // reset y position to top margin
+    }
+  }
+
+  // Utility to add label and value pair, with page break check
+  function addLabelValue(label, value) {
+    checkAddPage(10);
+    doc.setFont(undefined, 'bold');
+    doc.text(label, leftMargin, y);
+    doc.setFont(undefined, 'normal');
+    doc.text(value, leftMargin + 70, y);
+    y += 10;
+  }
+
+  // Title
+  doc.setFontSize(18);
+  doc.text('Retirement Evaluation Results', leftMargin, y);
+  y += 12;
+
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
+  doc.line(leftMargin, y, 200, y);
+  y += 10;
+
+  doc.setFontSize(14);
+  doc.setTextColor(0, 0, 0);
+
+  // Personal Details
+  checkAddPage(8);
+  doc.setFont(undefined, 'bold');
+  doc.text('Personal Details:', leftMargin, y);
+  y += 8;
+
+  doc.setFont(undefined, 'normal');
+  addLabelValue('Name:', results.personalDetails.name);
+  addLabelValue('Age:', results.personalDetails.age);
+  addLabelValue('Years Left Before Retirement:', String(results.yearsLeftBeforeRetire));
+
+  y += 5;
+  checkAddPage(8);
+  doc.setFont(undefined, 'bold');
+  doc.text('Financial Details Now:', leftMargin, y);
+  y += 8;
+
+  doc.setFont(undefined, 'normal');
+  addLabelValue('Monthly Expenditure:', String(results.personalDetails.mounthlyExpenditure));
+  addLabelValue('Saving:', String(results.personalDetails.saving));
+  addLabelValue('Investment:', String(results.personalDetails.investment));
+  addLabelValue('Assets:', String(results.personalDetails.asserts));
+  addLabelValue('Health Insurance:', results.personalDetails.healthInsurance === "1" ? 'Yes' : 'No');
+  addLabelValue('Loan Amount:', results.personalDetails.loan === "1" ? 'Yes' : 'No');
+
+  y += 5;
+  checkAddPage(8);
+  doc.setFont(undefined, 'bold');
+  doc.text('Financial Freedom:', leftMargin, y);
+  y += 8;
+
+  doc.setFont(undefined, 'normal');
+  addLabelValue('Number:', String(results.financialFreedom));
+  addLabelValue('Percent:', `${results.percentFinancialFreedom}%`);
+
+  y += 5;
+  checkAddPage(8);
+  doc.setFont(undefined, 'bold');
+  doc.text('Important Preparation:', leftMargin, y);
+  y += 8;
+
+  doc.setFont(undefined, 'normal');
+  addLabelValue('Health Insurance:', results.personalDetails.healthInsurance === "1" ? 'Yes' : 'No');
+  addLabelValue('Loan Amount:', results.personalDetails.loan === "1" ? 'Yes' : 'No');
+  addLabelValue('Projects:', results.personalDetails.projects === "1" ? 'Yes' : 'No');
+
+  y += 5;
+  checkAddPage(8);
+  doc.setFont(undefined, 'bold');
+  doc.text('Investment and Will Plans:', leftMargin, y);
+  y += 8;
+
+  doc.setFont(undefined, 'normal');
+  addLabelValue('Will Plan:', results.personalDetails.willPlan === "1" ? 'Yes' : 'No');
+  addLabelValue('Monthly Investment Plan:', results.personalDetails.investmentPlan === "1" ? 'Yes' : 'No');
+  addLabelValue('Projects:', results.personalDetails.projects === "1" ? 'Yes' : 'No');
+
+  y += 10;
+  checkAddPage(10);
+  doc.setFont(undefined, 'bold');
+  doc.text('Total Percentage:', leftMargin, y);
+  doc.setFont(undefined, 'normal');
+  doc.text(`${results.totalPercentage}%`, leftMargin + 70, y);
+  y += 15;
+
+  // Feedback
+  checkAddPage(8);
+  doc.setFont(undefined, 'bold');
+  doc.text('Feedback:', leftMargin, y);
+  y += 8;
+
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'normal');
+
+  // Split feedback text to fit page width, then print line by line with page checks
+  const splitFeedback = doc.splitTextToSize(results.feedback, 180);
+  splitFeedback.forEach(line => {
+    checkAddPage(7);
+    doc.text(line, leftMargin, y);
+    y += 7;
+  });
+
+  doc.save('retirement_evaluation.pdf');
+  });
+};
+
 
   return (
-    <div className="container mb-5">
+    <div className="container mb-5 py-1">
 
       {/* Personal Details */}
       <h4 className="mb-3 mt-4">{STR_PERSONAL_DETAILS[appContext.language]}</h4>
@@ -230,24 +397,123 @@ export default function RetirementForm() {
       </div>
 
       {/* Submit */}
-      <div className="col-12 text-end mt-4">
+      <div className="col-12 text-end mt-3">
         <button className="btn btn-primary" onClick={handleSubmit} disabled={loading}>
           {loading ? getInlineLoader() : STR_SUBMIT[appContext.language]}
         </button>
       </div>
 
       {/* Results */}
-      {results && (
-        <div className="mt-5 p-4 border border-success rounded bg-light">
-          <h4 className="mb-3">Evaluation Results</h4>
-          <h3>
-            <span className="badge bg-success">
-              {JSON.stringify(results.totalPercentage, null, 2)}%
-            </span>
-          </h3>
-          <h2 className="medium">{JSON.stringify(results.feedback, null, 2)}</h2>
-        </div>
-      )}
+{results && (
+  <div className="mt-3 p-4 mb-5 border border-success rounded bg-light">
+    <h1 className="mb-3"><strong>{STR_EVALUATION_RESULT[appContext.language]}</strong></h1>
+
+    <h3>
+      <span className="badge bg-success">
+        <strong>{STR_TOTAL_MARKS[appContext.language]}</strong>: {JSON.stringify(results.totalPercentage, null, 2)}%
+      </span>
+    </h3>
+
+    <section className="mb-4">
+      <h4 className="mb-3"><strong>{STR_NAME_OF_PARTICIPANT[appContext.language]}</strong></h4>
+      <h2 className="medium">{results.personalDetails.name}</h2>
+    </section>
+
+    <section className="mb-4">
+      <h4 className="mb-3"><strong>{STR_CREATE_AGE[appContext.language]}</strong></h4>
+      <h2 className="medium">{results.personalDetails.age}</h2>
+    </section>
+
+    <section className="mb-4">
+      <h4 className="mb-3"><strong>{STR_YEARS_LEFT_BEFORE_RETIREMENT[appContext.language]}</strong></h4>
+      <h2 className="medium">{results.yearsLeftBeforeRetire}</h2>
+    </section>
+
+    <h1 className="mb-3 mt-4"><strong>{STR_FINANCIAL_DETAILS_NOW[appContext.language]}</strong></h1>
+    <section className="mb-4">
+      <h2 className="medium">
+        <strong>{STR_CREATE_MONTHLY_EXPENDITURE[appContext.language]}</strong>: {results.personalDetails.mounthlyExpenditure}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_SAVING[appContext.language]}</strong>: {results.personalDetails.saving}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_INVESTMENT[appContext.language]}</strong>: {results.personalDetails.investment}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_ASSERTS[appContext.language]}</strong>: {results.personalDetails.asserts}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_HEALTH_INSURANCE[appContext.language]}</strong>: {results.personalDetails.healthInsurance === "1"
+          ? STR_OPTIONS_YES[appContext.language]
+          : STR_OPTIONS_NO[appContext.language]}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_LOAN_AMOUNT[appContext.language]}</strong>: {results.personalDetails.loan === "1"
+          ? STR_OPTIONS_YES[appContext.language]
+          : STR_OPTIONS_NO[appContext.language]}
+      </h2>
+
+      <h1 className="mb-3 mt-4"><strong>{STR__FINANCIAL_FREEDOM[appContext.language]}</strong></h1>
+      <h2 className="medium">
+        <strong>{STR_CREATE_FINANCIAL_FREEDOM_NUMBER[appContext.language]}</strong>: {results.financialFreedom}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_FINANCIAL_FREEDOM_PERCENT[appContext.language]}</strong>: {results.percentFinancialFreedom}
+      </h2>
+    </section>
+
+    <section className="mb-4">
+      <h1 className="mb-3"><strong>{STR__IMPORTANT_PREPARATION[appContext.language]}</strong></h1>
+      <h2 className="medium">
+        <strong>{STR_CREATE_HEALTH_INSURANCE[appContext.language]}</strong>: {results.personalDetails.healthInsurance === "1"
+          ? STR_OPTIONS_YES[appContext.language]
+          : STR_OPTIONS_NO[appContext.language]}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_LOAN_AMOUNT[appContext.language]}</strong>: {results.personalDetails.loan === "1"
+          ? STR_OPTIONS_YES[appContext.language]
+          : STR_OPTIONS_NO[appContext.language]}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_PROJECTS[appContext.language]}</strong>: {results.personalDetails.projects === "1"
+          ? STR_OPTIONS_YES[appContext.language]
+          : STR_OPTIONS_NO[appContext.language]}
+      </h2>
+    </section>
+
+    <section className="mb-4">
+      <h1 className="mb-3"><strong>{STR__INVESTMENT_AND_WILL_PLANS[appContext.language]}</strong></h1>
+      <h2 className="medium">
+        <strong>{STR_CREATE_WILL_PLAN[appContext.language]}</strong>: {results.personalDetails.willPlan === "1"
+          ? STR_OPTIONS_YES[appContext.language]
+          : STR_OPTIONS_NO[appContext.language]}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_MONTHLY_INVESTMENT_PLAN[appContext.language]}</strong>: {results.personalDetails.investmentPlan === "1"
+          ? STR_OPTIONS_YES[appContext.language]
+          : STR_OPTIONS_NO[appContext.language]}
+      </h2>
+      <h2 className="medium">
+        <strong>{STR_CREATE_PROJECTS[appContext.language]}</strong>: {results.personalDetails.projects === "1"
+          ? STR_OPTIONS_YES[appContext.language]
+          : STR_OPTIONS_NO[appContext.language]}
+      </h2>
+    </section>
+
+    <section className="mt-4">
+      <h4 className="mb-3">{[appContext.language]}</h4>
+      <h2 className="medium" style={{ whiteSpace: 'pre-line' }}>
+        {results.feedback}
+      </h2>
+    </section>
+
+    <button className="btn btn-outline-success mt-3" onClick={handleDownloadPDF}>
+      📄 Download PDF
+    </button>
+  </div>
+)}
+
     </div>
   );
 }

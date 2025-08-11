@@ -49,14 +49,14 @@ export const STR_CREATE_MONTHLY_EXPENSES = {
   
   en: (
     <>
-    Monthly Expenses(Tsh):<i> _eg:50000</i>
+    Monthly Expenses (Tsh):<i> _eg:50000</i>
       </>
      
   ),
   sw:
   (
     <>
-    Gharama za maisha kwa Mwezi(Tsh):<i> _mfano:50000</i>
+    Gharama za matumizi kwa Mwezi (Tsh):<i> _mfano:50000</i>
       </>
      
   ),
@@ -83,14 +83,14 @@ export const STR_CREATE_INVESTMENTS = {
   
   en: (
     <>
-    Investments(Tsh):<i> _eg:400000</i>
+    Investments(Tsh):<i> _eg:Business of worth</i>
       </>
      
   ),
   sw:
   (
     <>
-    Uwekezaji(Tsh):<i> _mfano:400000</i>
+    Uwekezaji(Tsh):<i> _mfano:Thamani ya biashara yako</i>
       </>
      
   ),
@@ -100,14 +100,14 @@ export const STR_CREATE_NON_INCOME_ASSETS = {
 
     en: (
     <>
-    Non-income Assets(Tsh):<i> _eg:500000</i>
+    Non-income Assets(Tsh):<i> _eg:house worth</i>
       </>
      
   ),
   sw:
   (
     <>
-    Mali zisizoingiza(Tsh):<i> _mfano:500000</i>
+    Mali zisizoingiza(Tsh):<i> _mfano:Thamani ya nyumba</i>
       </>
      
   ),
@@ -117,6 +117,56 @@ export const STR_CREATE_HEALTH_INSURANCE = {
   en: "Do you have health insurance?",
   sw: "Je una bima ya afya?"
 };
+
+export const STR_EVALUATION_RESULT = {
+  en: "EVALUATION RESULTS",
+  sw: "MATOKEO YA TATHMINI"
+};
+
+
+export const STR__IMPORTANT_PREPARATION = {
+  en: "IMPORTANT PREPARATION",
+  sw: "MAANDALIZI MUHIMU"
+};
+
+export const STR__INVESTMENT_AND_WILL_PLANS = {
+  en: "INVESTMENT AND WILL PLANS",
+  sw: "MIPANGO YA UWEKEZAJI NA URITHI"
+};
+
+export const STR_TOTAL_MARKS = {
+  en: "TOTAL MARKS",
+  sw: "JUMLA YA ALAMA"
+};
+
+
+
+export const STR_FINANCIAL_DETAILS_NOW = {
+  en: "FINANCIAL DETAILS NOW",
+  sw: "HALI YAKO YAKIFEDHA KWASASA"
+};
+export const STR_NAME_OF_PARTICIPANT = {
+  en: "Name Of Participant",
+  sw: "Majina Ya Mshiriki"
+};
+
+export const STR_YEARS_LEFT_BEFORE_RETIREMENT = {
+  en: "Years left before retirement",
+  sw: "Miaka iliyobaki Kabla Ya Kustaafu"
+};
+
+export const STR__FINANCIAL_FREEDOM = {
+  en: "FINANCIAL FREEDOM",
+  sw: "UHURU WA KIFEDHA"
+};
+
+export const STR__FINANCIAL_FREEDOM_PERCENT = {
+  en: "Financial Freedom Percentage",
+  sw: "Asilimia Za Uhuru Wa Kifedha"
+};
+
+
+
 
 export const STR_CREATE_DEBTS = {
   en: "Do you have debts?",
@@ -296,6 +346,11 @@ export const STR_CREATE_LOAN_AMOUNT = {
   sw: "Kiasi cha Deni (Tsh)",
 };
 
+export const STR_REQUIRED = {
+  en:"This Field is required",
+  sw:"Sehemu hii ni lazima ijazwe"
+
+};
 
 
 export const STR_CREATE_PROJECTS = {
