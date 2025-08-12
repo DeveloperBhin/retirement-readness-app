@@ -13,11 +13,12 @@ import {
   STR_OPTIONS_YES, STR_OPTIONS_NO,STR_REQUIRED,STR_EVALUATION_RESULT,STR_NAME_OF_PARTICIPANT,STR_YEARS_LEFT_BEFORE_RETIREMENT,
   STR_CREATE_MONTHLY_EXPENDITURE,STR__FINANCIAL_FREEDOM,STR__FINANCIAL_FREEDOM_PERCENT,STR_FINANCIAL_DETAILS_NOW,
   STR_CREATE_PROJECTS,STR__IMPORTANT_PREPARATION,STR__INVESTMENT_AND_WILL_PLANS,STR_TOTAL_MARKS,
-  STR_CREATE_ASSERTS,
+  STR_CREATE_ASSERTS,STR_FEEDBACK,
   STR_CREATE_SAVING,
   STR_CREATE_INVESTMENT,
   STR_CREATE_FINANCIAL_FREEDOM_NUMBER,
-  STR_CREATE_FINANCIAL_FREEDOM_PERCENT
+  STR_CREATE_FINANCIAL_FREEDOM_PERCENT,
+  STR_RETIREMENT_READNESS_CHECK
 } from '../Strings.js';
 
 export default function RetirementForm() {
@@ -25,6 +26,7 @@ export default function RetirementForm() {
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
+
 
   const [form, setForm] = useState({
     name: '', age: '', occupation: '', phone: '', email: '',
@@ -217,106 +219,153 @@ const handleDownloadPDF = () => {
     doc.setFont(undefined, 'bold');
     doc.text(label, leftMargin, y);
     doc.setFont(undefined, 'normal');
-    doc.text(value, leftMargin + 70, y);
+    doc.text(value, leftMargin + 90, y);
     y += 10;
   }
 
-  // Title
-  doc.setFontSize(18);
-  doc.text('Retirement Evaluation Results', leftMargin, y);
-  y += 12;
+ // Title
+doc.setFontSize(18);
+doc.text(STR_RETIREMENT_READNESS_CHECK[appContext.language], leftMargin, y);
+y += 12;
 
-  doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.5);
-  doc.line(leftMargin, y, 200, y);
-  y += 10;
+doc.setDrawColor(0, 0, 0);
+doc.setLineWidth(0.5);
+doc.line(leftMargin, y, 200, y);
+y += 10;
 
-  doc.setFontSize(14);
-  doc.setTextColor(0, 0, 0);
+doc.setFontSize(14);
+doc.setTextColor(0, 0, 0);
 
-  // Personal Details
-  checkAddPage(8);
-  doc.setFont(undefined, 'bold');
-  doc.text('Personal Details:', leftMargin, y);
-  y += 8;
+// Personal Details
+checkAddPage(8);
+doc.setFont(undefined, 'bold');
+doc.text(STR_PERSONAL_DETAILS[appContext.language] + ":", leftMargin, y);
+y += 8;
 
-  doc.setFont(undefined, 'normal');
-  addLabelValue('Name:', results.personalDetails.name);
-  addLabelValue('Age:', results.personalDetails.age);
-  addLabelValue('Years Left Before Retirement:', String(results.yearsLeftBeforeRetire));
+doc.setFont(undefined, 'normal');
+addLabelValue(STR_NAME_OF_PARTICIPANT[appContext.language] + ":", results.personalDetails.name);
+addLabelValue(STR_CREATE_AGE[appContext.language] + ":", results.personalDetails.age);
+doc.setFont(undefined, 'small');
 
-  y += 5;
-  checkAddPage(8);
-  doc.setFont(undefined, 'bold');
-  doc.text('Financial Details Now:', leftMargin, y);
-  y += 8;
+addLabelValue(
+  STR_YEARS_LEFT_BEFORE_RETIREMENT[appContext.language] + ":  ",
+String(  results.yearsLeftBeforeRetire)
+);
 
-  doc.setFont(undefined, 'normal');
-  addLabelValue('Monthly Expenditure:', String(results.personalDetails.mounthlyExpenditure));
-  addLabelValue('Saving:', String(results.personalDetails.saving));
-  addLabelValue('Investment:', String(results.personalDetails.investment));
-  addLabelValue('Assets:', String(results.personalDetails.asserts));
-  addLabelValue('Health Insurance:', results.personalDetails.healthInsurance === "1" ? 'Yes' : 'No');
-  addLabelValue('Loan Amount:', results.personalDetails.loan === "1" ? 'Yes' : 'No');
+y += 18;
+checkAddPage(8);
+doc.setFont(undefined, 'bold');
+doc.text(STR_FINANCIAL_DETAILS_NOW[appContext.language] + ":", leftMargin, y);
+y += 8;
 
-  y += 5;
-  checkAddPage(8);
-  doc.setFont(undefined, 'bold');
-  doc.text('Financial Freedom:', leftMargin, y);
-  y += 8;
+doc.setFont(undefined, 'normal');
+addLabelValue(STR_CREATE_MONTHLY_EXPENDITURE[appContext.language] + ":", String(results.personalDetails.mounthlyExpenditure));
+addLabelValue(STR_CREATE_SAVING[appContext.language] + ":", String(results.personalDetails.saving));
+addLabelValue(STR_CREATE_INVESTMENTS[appContext.language] + ":", String(results.personalDetails.investment));
+addLabelValue(STR_CREATE_ASSERTS[appContext.language] + ":", String(results.personalDetails.asserts));
+addLabelValue(
+  STR_CREATE_HEALTH_INSURANCE[appContext.language] + ":",
+  results.personalDetails.healthInsurance 
+    ? STR_OPTIONS_YES[appContext.language]
+    : STR_OPTIONS_NO[appContext.language]
+);
+addLabelValue(
+  STR_CREATE_LOAN_AMOUNT[appContext.language] + ":",
+  results.personalDetails.loan === "1"
+    ? STR_OPTIONS_YES[appContext.language]
+    : STR_OPTIONS_NO[appContext.language]
+);
 
-  doc.setFont(undefined, 'normal');
-  addLabelValue('Number:', String(results.financialFreedom));
-  addLabelValue('Percent:', `${results.percentFinancialFreedom}%`);
+y += 5;
+checkAddPage(8);
+doc.setFont(undefined, 'bold');
+doc.text(STR__FINANCIAL_FREEDOM[appContext.language] + ":", leftMargin, y);
+y += 8;
 
-  y += 5;
-  checkAddPage(8);
-  doc.setFont(undefined, 'bold');
-  doc.text('Important Preparation:', leftMargin, y);
-  y += 8;
+doc.setFont(undefined, 'normal');
+addLabelValue(STR__FINANCIAL_FREEDOM[appContext.language] + ":", String(results.financialFreedom));
+addLabelValue(STR_CREATE_FINANCIAL_FREEDOM_PERCENT[appContext.language] + ":", `${results.percentFinancialFreedom}%`);
 
-  doc.setFont(undefined, 'normal');
-  addLabelValue('Health Insurance:', results.personalDetails.healthInsurance === "1" ? 'Yes' : 'No');
-  addLabelValue('Loan Amount:', results.personalDetails.loan === "1" ? 'Yes' : 'No');
-  addLabelValue('Projects:', results.personalDetails.projects === "1" ? 'Yes' : 'No');
+y += 5;
+checkAddPage(8);
+doc.setFont(undefined, 'bold');
+doc.text(STR__IMPORTANT_PREPARATION[appContext.language] + ":", leftMargin, y);
+y += 8;
 
-  y += 5;
-  checkAddPage(8);
-  doc.setFont(undefined, 'bold');
-  doc.text('Investment and Will Plans:', leftMargin, y);
-  y += 8;
+doc.setFont(undefined, 'normal');
+addLabelValue(
+  STR_CREATE_HEALTH_INSURANCE[appContext.language] + ":",
+  results.personalDetails.healthInsurance 
+    ? STR_OPTIONS_YES[appContext.language]
+    : STR_OPTIONS_NO[appContext.language]
+);
+addLabelValue(
+  STR_CREATE_LOAN_AMOUNT[appContext.language] + ":",
+  results.personalDetails.loan 
+    ? STR_OPTIONS_YES[appContext.language]
+    : STR_OPTIONS_NO[appContext.language]
+);
+addLabelValue(
+  STR_CREATE_PROJECTS[appContext.language] + ":",
+  results.personalDetails.projects 
+    ? STR_OPTIONS_YES[appContext.language]
+    : STR_OPTIONS_NO[appContext.language]
+);
 
-  doc.setFont(undefined, 'normal');
-  addLabelValue('Will Plan:', results.personalDetails.willPlan === "1" ? 'Yes' : 'No');
-  addLabelValue('Monthly Investment Plan:', results.personalDetails.investmentPlan === "1" ? 'Yes' : 'No');
-  addLabelValue('Projects:', results.personalDetails.projects === "1" ? 'Yes' : 'No');
+y += 5;
+checkAddPage(8);
+doc.setFont(undefined, 'bold');
+doc.text(STR__INVESTMENT_AND_WILL_PLANS[appContext.language] + ":", leftMargin, y);
+y += 8;
 
-  y += 10;
-  checkAddPage(10);
-  doc.setFont(undefined, 'bold');
-  doc.text('Total Percentage:', leftMargin, y);
-  doc.setFont(undefined, 'normal');
-  doc.text(`${results.totalPercentage}%`, leftMargin + 70, y);
-  y += 15;
+doc.setFont(undefined, 'normal');
+addLabelValue(
+  STR_CREATE_WILL_PLAN[appContext.language] + ":",
+  results.personalDetails.willPlan 
+    ? STR_OPTIONS_YES[appContext.language]
+    : STR_OPTIONS_NO[appContext.language]
+);
+addLabelValue(
+  STR_CREATE_INVESTMENT[appContext.language] + ":",
+  results.personalDetails.investmentPlan 
+    ? STR_OPTIONS_YES[appContext.language]
+    : STR_OPTIONS_NO[appContext.language]
+);
+addLabelValue(
+  STR_CREATE_PROJECTS[appContext.language] + ":",
+  results.personalDetails.projects 
+    ? STR_OPTIONS_YES[appContext.language]
+    : STR_OPTIONS_NO[appContext.language]
+);
 
-  // Feedback
-  checkAddPage(8);
-  doc.setFont(undefined, 'bold');
-  doc.text('Feedback:', leftMargin, y);
-  y += 8;
+y += 10;
+checkAddPage(10);
+doc.setFont(undefined, 'bold');
+doc.text(STR_TOTAL_MARKS[appContext.language] + ":", leftMargin, y);
+doc.setFont(undefined, 'normal');
+doc.text(`${results.totalPercentage}%`, leftMargin + 70, y);
+y += 15;
 
-  doc.setFontSize(12);
-  doc.setFont(undefined, 'normal');
+// Feedback
+checkAddPage(8);
+doc.setFont(undefined, 'bold');
+doc.text(STR_FEEDBACK[appContext.language] + ":", leftMargin, y);
+y += 8;
 
-  // Split feedback text to fit page width, then print line by line with page checks
-  const splitFeedback = doc.splitTextToSize(results.feedback, 180);
-  splitFeedback.forEach(line => {
-    checkAddPage(7);
-    doc.text(line, leftMargin, y);
-    y += 7;
-  });
 
-  doc.save('retirement_evaluation.pdf');
+doc.setFontSize(12);
+doc.setFont(undefined, 'normal');
+
+// Split feedback text to fit page width
+const splitFeedback = doc.splitTextToSize(results.feedback, 180);
+splitFeedback.forEach(line => {
+  checkAddPage(7);
+  doc.text(line, leftMargin, y);
+  y += 7;
+});
+
+doc.save('retirement_evaluation.pdf');
+
   });
 };
 
@@ -444,14 +493,13 @@ const handleDownloadPDF = () => {
         <strong>{STR_CREATE_ASSERTS[appContext.language]}</strong>: {results.personalDetails.asserts}
       </h2>
       <h2 className="medium">
-        <strong>{STR_CREATE_HEALTH_INSURANCE[appContext.language]}</strong>: {results.personalDetails.healthInsurance === "1"
+        <strong>{STR_CREATE_HEALTH_INSURANCE[appContext.language]}</strong>: {results.personalDetails.healthInsurance 
           ? STR_OPTIONS_YES[appContext.language]
           : STR_OPTIONS_NO[appContext.language]}
       </h2>
       <h2 className="medium">
-        <strong>{STR_CREATE_LOAN_AMOUNT[appContext.language]}</strong>: {results.personalDetails.loan === "1"
-          ? STR_OPTIONS_YES[appContext.language]
-          : STR_OPTIONS_NO[appContext.language]}
+        <strong>{STR_CREATE_LOAN_AMOUNT[appContext.language]}</strong>: {results.personalDetails.loanAmount
+}
       </h2>
 
       <h1 className="mb-3 mt-4"><strong>{STR__FINANCIAL_FREEDOM[appContext.language]}</strong></h1>
@@ -466,17 +514,17 @@ const handleDownloadPDF = () => {
     <section className="mb-4">
       <h1 className="mb-3"><strong>{STR__IMPORTANT_PREPARATION[appContext.language]}</strong></h1>
       <h2 className="medium">
-        <strong>{STR_CREATE_HEALTH_INSURANCE[appContext.language]}</strong>: {results.personalDetails.healthInsurance === "1"
+        <strong>{STR_CREATE_HEALTH_INSURANCE[appContext.language]}</strong>: {results.personalDetails.healthInsurance 
           ? STR_OPTIONS_YES[appContext.language]
           : STR_OPTIONS_NO[appContext.language]}
       </h2>
       <h2 className="medium">
-        <strong>{STR_CREATE_LOAN_AMOUNT[appContext.language]}</strong>: {results.personalDetails.loan === "1"
+        <strong>{STR_CREATE_DEBTS[appContext.language]}</strong>: {results.personalDetails.loan 
           ? STR_OPTIONS_YES[appContext.language]
           : STR_OPTIONS_NO[appContext.language]}
       </h2>
       <h2 className="medium">
-        <strong>{STR_CREATE_PROJECTS[appContext.language]}</strong>: {results.personalDetails.projects === "1"
+        <strong>{STR_CREATE_PROJECTS[appContext.language]}</strong>: {results.personalDetails.projects 
           ? STR_OPTIONS_YES[appContext.language]
           : STR_OPTIONS_NO[appContext.language]}
       </h2>
@@ -485,27 +533,28 @@ const handleDownloadPDF = () => {
     <section className="mb-4">
       <h1 className="mb-3"><strong>{STR__INVESTMENT_AND_WILL_PLANS[appContext.language]}</strong></h1>
       <h2 className="medium">
-        <strong>{STR_CREATE_WILL_PLAN[appContext.language]}</strong>: {results.personalDetails.willPlan === "1"
+        <strong>{STR_CREATE_WILL_PLAN[appContext.language]}</strong>: {results.personalDetails.willPlan 
           ? STR_OPTIONS_YES[appContext.language]
           : STR_OPTIONS_NO[appContext.language]}
       </h2>
       <h2 className="medium">
-        <strong>{STR_CREATE_MONTHLY_INVESTMENT_PLAN[appContext.language]}</strong>: {results.personalDetails.investmentPlan === "1"
+        <strong>{STR_CREATE_MONTHLY_INVESTMENT_PLAN[appContext.language]}</strong>: {results.personalDetails.mounthlyInvestmentPlan 
           ? STR_OPTIONS_YES[appContext.language]
           : STR_OPTIONS_NO[appContext.language]}
       </h2>
       <h2 className="medium">
-        <strong>{STR_CREATE_PROJECTS[appContext.language]}</strong>: {results.personalDetails.projects === "1"
+        <strong>{STR_CREATE_PROJECTS[appContext.language]}</strong>: {results.personalDetails.projects 
           ? STR_OPTIONS_YES[appContext.language]
           : STR_OPTIONS_NO[appContext.language]}
       </h2>
     </section>
 
     <section className="mt-4">
-      <h4 className="mb-3">{[appContext.language]}</h4>
+     
       <h2 className="medium" style={{ whiteSpace: 'pre-line' }}>
         {results.feedback}
       </h2>
+      
     </section>
 
     <button className="btn btn-outline-success mt-3" onClick={handleDownloadPDF}>

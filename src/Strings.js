@@ -150,6 +150,13 @@ export const STR_NAME_OF_PARTICIPANT = {
   sw: "Majina Ya Mshiriki"
 };
 
+export const STR_FEEDBACK = {
+  en: "FEEDBACK",
+  sw: "MREJESHO"
+};
+
+
+
 export const STR_YEARS_LEFT_BEFORE_RETIREMENT = {
   en: "Years left before retirement",
   sw: "Miaka iliyobaki Kabla Ya Kustaafu"
@@ -397,6 +404,119 @@ export const STR_OPTIONS_NO= {
   sw: "Hapana",
 };
 
+// strings.js
+
+export const feedbackTemplates = {
+  en: {
+    investmentPlan: ({ age, years, dailyInvestment, totalInvestment, targetAmount, name, passiveIncomeGoal }) => `
+Power of the Book Program:
+- Investment start year: ${age} (${years} years to invest)
+- Investment days: ${years * 365}
+- Total daily investment (TZS ${dailyInvestment.toLocaleString()}): ${totalInvestment.toLocaleString()}
+- Estimated investment value: ${targetAmount.toLocaleString()}
+By following this plan, ${name} will have a passive income of at least TZS ${passiveIncomeGoal.toLocaleString()} per month after retirement.`,
+    
+    feedbackLow: (name, investmentPlanText) => `
+RETIREMENT READINESS: ${name}, your readiness level is low. 
+You have some financial foundation but need a stronger plan.
+
+RECOMMENDATIONS:
+1. Start an inheritance (will) plan immediately to protect your assets.
+2. Increase monthly investment: ${investmentPlanText}
+3. Turn non-performing assets into income.
+4. Clear all debts before retirement.
+5. Join a financial advisory plan.
+`,
+
+    feedbackMedium: (name, investmentPlanText) => `
+RETIREMENT READINESS: ${name}, you are in the intermediate phase of retirement preparation. 
+You have a good foundation but there is room for improvement.
+
+RECOMMENDATIONS:
+1. Prepare your inheritance plan as soon as possible.
+2. Strengthen investments: ${investmentPlanText}
+3. Ensure non-performing assets are profitable.
+4. Reduce debt and increase savings.
+5. Continue working with a financial advisor.
+`,
+
+    feedbackHigh: (name, investmentPlanText) => `
+RETIREMENT READINESS: ${name}, you are very close to financial freedom. 
+Your strategies are good but a few final steps remain.
+
+RECOMMENDATIONS:
+1. Complete your inheritance plan.
+2. Continue investing: ${investmentPlanText}
+3. Ensure all projects yield sustainable profits.
+4. Pay off remaining debts.
+`,
+
+    feedbackComplete: (name, investmentPlanText) => `
+RETIREMENT READINESS: Congratulations ${name}! You are ready to retire financially.
+Continue protecting your assets and projects to maintain financial independence.
+
+RECOMMENDATIONS:
+1. Establish inheritance plans and continue legacy building for your family.
+2. Keep tracking investments: ${investmentPlanText}
+3. Maintain a debt-free life.
+`,
+  },
+
+  sw: {
+    investmentPlan: ({ age, years, dailyInvestment, totalInvestment, targetAmount, name, passiveIncomeGoal }) => `
+Nguvu ya Buku Program:
+- Mwaka kuanza uwekezaji: ${age} (${years} miaka ya kuwekeza)
+- Siku za uwekezaji: ${years * 365}
+- Jumla ya uwekezaji kwa siku (TZS ${dailyInvestment.toLocaleString()}): ${totalInvestment.toLocaleString()}
+- Thamani inayokadiriwa ya uwekezaji: ${targetAmount.toLocaleString()}
+Kwa kufuata mpango huu, ${name} atakuwa na kipato kisichopungua TZS ${passiveIncomeGoal.toLocaleString()} kwa mwezi baada ya kustaafu.`,
+
+    feedbackLow: (name, investmentPlanText) => `
+TAFSIRI YA UTAAYARI: ${name}, kiwango chako cha utayari wa kustaafu kipo chini. 
+Una baadhi ya misingi ya kifedha lakini unahitaji mpango imara zaidi.
+
+MAPENDEKEZO:
+1. Anza mara moja mpango wa urithi (wosia) ili kulinda mali zako.
+2. Kuongeza uwekezaji wa kila mwezi: ${investmentPlanText}
+3. Badilisha mali zisizolipa ili kuleta kipato.
+4. Ondoa madeni yote kabla ya kustaafu.
+5. Jiunge na mpango wa ushauri wa kifedha.
+`,
+
+    feedbackMedium: (name, investmentPlanText) => `
+TAFSIRI YA UTAAYARI: ${name}, uko kwenye hatua ya kati ya maandalizi ya kustaafu. 
+Una misingi mizuri lakini bado kuna nafasi kubwa ya kuboresha.
+
+MAPENDEKEZO:
+1. Kuandaa mpango wa urithi haraka iwezekanavyo.
+2. Kuimarisha uwekezaji: ${investmentPlanText}
+3. Hakikisha mali zisizolipa zinakuwa na faida.
+4. Punguza deni na ongeza akiba.
+5. Endelea kushirikiana na mshauri wa kifedha.
+`,
+
+    feedbackHigh: (name, investmentPlanText) => `
+TAFSIRI YA UTAAYARI: ${name}, uko karibu sana na uhuru wa kifedha. 
+Mikakati yako iko vizuri lakini bado kuna hatua chache za mwisho.
+
+MAPENDEKEZO:
+1. Kamalisha mpango wa urithi.
+2. Endelea na uwekezaji: ${investmentPlanText}
+3. Hakikisha miradi yote inaleta faida endelevu.
+4. Lipa deni lililobaki.
+`,
+
+    feedbackComplete: (name, investmentPlanText) => `
+TAFSIRI YA UTAAYARI: Hongera ${name}! Uko tayari kustaafu kifedha.
+Endelea kulinda mali na miradi yako ili kudumisha uhuru wa kifedha.
+
+MAPENDEKEZO:
+1. Weka mipango ya urithi na uendeleze urithi wa kifedha kwa familia yako.
+2. Endelea kufuatilia uwekezaji: ${investmentPlanText}
+3. Kudumisha maisha bila madeni.
+`
+  }
+};
 
 
 
