@@ -210,8 +210,8 @@ export const STR_FUTURE_PLANNING= {
   sw: "Mipango Ya Baadae"
 };
 export const STR_CREATE_FINANCIAL_FREEDOM_NUMBER = {
-  en: "Financial Freedom Number (Monthly x 100)",
-  sw: "Namba ya Uhuru (Mwezi x 100)"
+  en: "Financial Freedom Number ",
+  sw: "Namba ya Uhuru "
 };
 
 export const STR_CREATE_FINANCIAL_FREEDOM_PERCENT = {

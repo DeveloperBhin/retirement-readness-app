@@ -504,7 +504,7 @@ doc.save('retirement_evaluation.pdf');
 
       <h1 className="mb-3 mt-4"><strong>{STR__FINANCIAL_FREEDOM[appContext.language]}</strong></h1>
       <h2 className="medium">
-        <strong>{STR_CREATE_FINANCIAL_FREEDOM_NUMBER[appContext.language]}</strong>: {results.financialFreedom}
+        <strong>{STR_CREATE_FINANCIAL_FREEDOM_NUMBER[appContext.language]}</strong>: {results.mounthlyExpenditure}
       </h2>
       <h2 className="medium">
         <strong>{STR_CREATE_FINANCIAL_FREEDOM_PERCENT[appContext.language]}</strong>: {results.percentFinancialFreedom}
