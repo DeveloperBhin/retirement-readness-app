@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base API URL (adjust if needed)
-export const BASE_API = 'http://localhost:3001/api/';
+export const BASE_API = 'https://buku-api.utajiri.tz/api/';
 
 
 
@@ -44,3 +44,4 @@ export async function callApi(endpoint, params = {}) {
     };
   }
 }
+
